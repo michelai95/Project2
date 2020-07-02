@@ -35,7 +35,7 @@
 ![](IMG_3007.jpeg)
 ![](IMG_3008.jpeg)
 ![](IMG_2020-07-02.jpeg)
-![](IMG-07-02.jpeg)
+![](IMG_2-20.jpeg)
 
 
 ## FLEXIN
