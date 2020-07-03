@@ -1,0 +1,29 @@
+USER 
+----
+firstName: string (NOT NULL),
+lastName: string,
+age: integer,
+birthday: integer,
+password: varchar 
+email: string
+
+SONG
+----
+name: string (NOT NULL),
+artist: string,
+genre: string,
+songId: integer (FK),
+length: integer
+
+PLAYLIST
+-----
+name: string,
+songId: integer (FK),
+userId: integer (PK),
+
+
+sequelize model:create --name user --attributes firstName:string,lastName:string,age:integer,email:string,password:string,birthday:integer;
+
+sequelize model:create --name song --attributes name:string,artist:string,genre:string,songId:integer,length:integer;
+
+sequelize model:create --name playlist --attributes name:string,songId:integer,userId:integer; 
