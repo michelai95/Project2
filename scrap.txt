@@ -21,9 +21,23 @@ name: string,
 songId: integer (FK),
 userId: integer (PK),
 
+USERPLAYLIST 
+----
+userId: integer,
+playlistId: integer
+
+USERSONG
+---
+userId: integer,
+songId: integer
+
 
 sequelize model:create --name user --attributes firstName:string,lastName:string,age:integer,email:string,password:string,birthday:integer;
 
 sequelize model:create --name song --attributes name:string,artist:string,genre:string,songId:integer,length:integer;
 
 sequelize model:create --name playlist --attributes name:string,songId:integer,userId:integer; 
+
+sequelize model:create --name userPlaylists --attributes userId:integer,songId:integer;
+
+sequelize model:create --name userSongs --attributes userId:integer,songId:integer;

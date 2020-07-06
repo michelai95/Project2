@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   playlist.associate = function(models) {
     // associations can be defined here
     models.playlist.belongsTo(models.user)
-    models.playlist.hasMany(models.song)
+    models.playlist.belongsToMany(models.song)
   };
   return playlist;
 };
