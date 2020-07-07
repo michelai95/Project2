@@ -23,7 +23,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store)
 // APP setup
 const app = Express()
 app.use(Express.urlencoded({extended: false}))
-app.use(Express.static(__dirname + '/public'))
+app.use(Express.static(__dirname + '/public')).use(cors()).use(cookeParser())
 app.set('view engine', 'ejs')
 app.use(ejsLayouts)
 app.use(require('morgan')('dev'))

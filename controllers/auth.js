@@ -5,6 +5,33 @@ const db = require('../models')
 const flash = require('connect-flash')
 const passport = require('../config/ppConfig')
 const { Router } = require('express')
+
+var request = require('request')
+var cors = require('cors')
+var querystring = require('querystring')
+var cookieParser = require('cookie-parser')
+
+var client_id = 'CLIENT_ID'
+var client_secret = 'CLIENT_SECRET'
+var redirect_uri = 'REDIRECT_URI'
+
+// generates random string containing numbers and letters
+
+// @param {number}
+// @return {string}
+
+var generateRandomString = function(length) {
+    var text = ""
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+    for(var i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length))
+    }
+    return text
+}
+
+var stateKey = 'spotify_auth_state'
+var app = express()
 // ROUTES 
 
 // homepage - GET main index of the site/API
