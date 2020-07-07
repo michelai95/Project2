@@ -4,6 +4,7 @@ const router = express.Router()
 const db = require('../models')
 const flash = require('connect-flash')
 const passport = require('../config/ppConfig')
+const { Router } = require('express')
 // ROUTES 
 
 // homepage - GET main index of the site/API
@@ -95,3 +96,5 @@ router.get('/logout', function(req, res) {
     req.logout()
     res.redirect('/')
 })
+
+module.exports = router

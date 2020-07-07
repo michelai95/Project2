@@ -46,7 +46,7 @@ app.use(session({
 sessionStore.sync()
 
 // initialize flash messages, passport, and sessions 
-// app.use(passport.initialize())
+app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
 

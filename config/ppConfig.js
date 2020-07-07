@@ -11,3 +11,5 @@ passport.deserializeUser(function(id, cb) {
         cb(null, user)
     }).catch(cb)
 })
+
+module.exports = passport
