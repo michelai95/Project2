@@ -26,9 +26,17 @@ var generateRandomString = function(length) {
 
 var stateKey = 'spotify_auth_state'
 
+var app = express();
+
+app.use(express.static(__dirname + '/public'))
+   .use(cors())
+   .use(cookieParser());
+
+app.get('/login', function(req, res) {
 
 var state = generateRandomString(16);
 res.cookie(stateKey, state);
+
 
 // your application requests authorization
 var scope = 'user-read-private user-read-email';
@@ -40,8 +48,7 @@ res.redirect('https://accounts.spotify.com/authorize?' +
     redirect_uri: redirect_uri,
     state: state
   }));
-});
-
+})
 app.get('/callback', function(req, res) {
 
 // your application requests refresh and access tokens
@@ -127,3 +134,6 @@ request.post(authOptions, function(error, response, body) {
   }
 });
 });
+
+console.log('Listening on 8888');
+app.listen(8888)
