@@ -22,7 +22,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
 // APP setup
 const app = Express()
-app.use(Express.urlendcoded({extended: false}))
+app.use(Express.urlencoded({extended: false}))
 app.use(Express.static(__dirname + '/public'))
 app.set('view engine', 'ejs')
 app.use(ejsLayouts)
@@ -46,7 +46,7 @@ app.use(session({
 sessionStore.sync()
 
 // initialize flash messages, passport, and sessions 
-app.use(passport.initialize())
+// app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
 
@@ -70,6 +70,16 @@ app.get('/profile', isLoggedIn, function(req, res) {
 
 // call on routes page 
 app.use('/route', require('./controllers/auth'))
+
+// authenticate 
+app.get('/login', function(req, res) {
+    var scopes = 'user-read-private user-read-email';
+    res.redirect('https://accounts.spotify.com/authorize' +
+      '?response_type=code' +
+      '&client_id=' + my_client_id +
+      (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+      '&redirect_uri=' + encodeURIComponent(redirect_uri));
+    });
 
 // initialize Server 
 app.listen(process.env.PORT || 3000, () => {
