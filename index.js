@@ -11,7 +11,7 @@ const passport = require('./config/ppConfig')
 const db = require('./models')
 const isLoggedIn = require('./middleware/isLoggedIn')
 
-var express = require('express')
+const express = require('express')
 var request = require('request')
 var cors = require('cors')
 var querystring = require('querystring')
@@ -98,18 +98,27 @@ app.get('/login', function (req, res) {
     console.log(redirect_uri)
     var state = generateRandomString(16);
     res.cookie(stateKey, state);
-
+    
     // your application requests authorization
     var scope = 'user-read-private user-read-email';
     res.redirect('https://accounts.spotify.com/authorize?' +
-        querystring.stringify({
-            response_type: 'code',
-            client_id: client_id,
-            scope: scope,
-            redirect_uri: redirect_uri,
-            state: state
-        }));
+    querystring.stringify({
+        response_type: 'code',
+        client_id: client_id,
+        scope: scope,
+        redirect_uri: redirect_uri,
+        state: state
+    }));
 })
+
+// app.get('/login', function(req, res) {
+//     var scopes = 'user-read-private user-read-email';
+//     res.redirect('https://accounts.spotify.com/authorize' +
+//       '?response_type=code' +
+//       '&client_id=' + my_client_id +
+//       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+//       '&redirect_uri=' + encodeURIComponent(redirect_uri));
+//     });
 
 app.get('/profile', function(req, res) {
     // your application requests refresh and access tokens
@@ -119,8 +128,6 @@ console.log('🌞')
 var code = req.query.code || null;
 var state = req.query.state || null;
 var storedState = req.cookies ? req.cookies[stateKey] : null;
-
-console.log('req.cookies =', req.cookies ,'code = ', code, 'state =', state, 'storedState=', storedState)
 
 if (state === null || state !== storedState) {
   res.redirect('/#' +
@@ -156,15 +163,12 @@ if (state === null || state !== storedState) {
 
       // use the access token to access the Spotify Web API
       request.get(options, function(error, response, body) {
-        console.log(body);
         res.render('profile/profile', {body})
     });
     
     // we can also pass the token to the browser to make requests from there
     // res.redirect('/#' +
     querystring.stringify({
-        // access_token: access_token,
-        // refresh_token: refresh_token
     })
 } else {
     res.redirect('/#' +
@@ -176,18 +180,17 @@ if (state === null || state !== storedState) {
 }
 })
 
+// app.get('/', function(req, res) {
+//     req.query.playlist 
+//     var playlistOptions = {
+//         url: 'https://api.spotify.com/v1/users/{user_id}/playlists'
+//     }
+//     res.render('profile/profile', {body})
+// })
+
 // call on routes page 
 app.use('/route', require('./controllers/auth'))
 
-// authenticate 
-// app.get('/login', function(req, res) {
-//     var scopes = 'user-read-private user-read-email';
-//     res.redirect('https://accounts.spotify.com/authorize' +
-//       '?response_type=code' +
-//       '&client_id=' + my_client_id +
-//       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-//       '&redirect_uri=' + encodeURIComponent(redirect_uri));
-//     });
 
 app.get('/refresh_token', function(req, res) {
 
@@ -212,6 +215,55 @@ request.post(authOptions, function(error, response, body) {
   }
 });
 });
+
+app.get('/register', function(req, res) {
+    db.user.findOrCreate({
+        where: {
+            email: req.body.email
+        }, defaults: {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            password: req.body.password,
+            age: req.body.age,
+            birthday: req.body.birthday
+        }
+    })
+})
+
+app.post('/register', function(req, res) {
+    db.user.findOrCreate({
+        where: {
+            email: req.body.email
+        }, defaults: {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            password: req.body.password,
+            age: req.body.age,
+            birthday: req.body.birthday
+        }
+    }).then(function([user, created]) {
+        if (created) {
+            console.log('user is created')
+            passport.authenticate('local', {
+                successRedirect: '/profile',
+                successFlash: 'Thanks for registering!'
+            })(req, res)
+        } else {
+            console.log('User email already exists!')
+            req.flash('error', 'Error: email already exists for user. Try again')
+            res.redirect('/auth/register')
+        }
+    }).catch(function(err) {
+        console.log(`Error found. \nMessage: ${err.message} \nPlease review - ${err}`)
+        req.flash('error', err.message)
+        res.redirect('/auth/register')
+    })
+})
+
+app.get('/logout', function(req, res) {
+    req.logout()
+    res.redirect('/')
+})
 
 // initialize Server 
 app.listen(process.env.PORT || 3000, () => {
