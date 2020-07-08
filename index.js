@@ -1,15 +1,10 @@
 // required NPM libraries 
-
-// config dotenv
 require('dotenv').config()
-//require express app instance
 const Express = require('express')
-// require and set view engine using ejs 
 const ejsLayouts = require('express-ejs-layouts')
 
 // require all middleware
 const helmet = require('helmet')
-//express sessions/sequelize sessions
 const session = require('express-session')
 const flash = require('connect-flash')
 const passport = require('./config/ppConfig')
@@ -56,6 +51,7 @@ app.set('view engine', 'ejs')
 app.use(ejsLayouts)
 app.use(require('morgan')('dev'))
 app.use(helmet())
+app.use('/auth', require('./controllers/auth'))
 
 
 // sequelize store class 

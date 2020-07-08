@@ -13,9 +13,19 @@
     <div>
         <h3><%= body.display_name %></h3>
     </div>
+    <div class="profileDetails">
+        <h3>Groove Name: <%= body.id %></h3>
+    </div>
     <div class='profileDetails'>
-        <h5>Profile: <%= body.email %></h5>
-    </div>    
+        <h5>Email: <%= body.email %></h5>
+    </div>
+    <div class="profileDetails">
+        <h3>The amount of Groovers that dig your vibe!</h3>
+        <h3><%= body.followers.total %></h3>
+    </div>
+    <div class="profileDetails">
+        <img src="<%= body.images.url %>">
+    </div>
 </body>
 </html>
 

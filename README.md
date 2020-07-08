@@ -4,15 +4,15 @@
 
 ## homepage 
 - [ ] a homepage with a Jukebox in the background 
-- [ ] a login button for users 
-- [ ] a register button for users 
-- [ ] a description for what you can do with the application 
+- [X] a login button for users 
+- [X] a register button for users 
+- [X] a description for what you can do with the application 
 
 ## login 
-- [ ] a section that allows you to enter your username 
-- [ ] section that prompts you to enter your password
-- [ ] a message that will flash whether or not you have entered the right credentials 
-- [ ] a button that allows you to register if you haven't created an account 
+- [X] a section that allows you to enter your username 
+- [X] section that prompts you to enter your password
+- [X] a message that will flash whether or not you have entered the right credentials 
+- [X] a button that allows you to register if you haven't created an account 
 
 ## register 
 - [ ] a form with the following
