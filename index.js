@@ -94,8 +94,10 @@ app.use(function(req, res, next) {
 // ROUTES 
 
 app.get('/', function (req, res) {
+    console.log('I am here')
     res.render('index')
 })
+
 app.get('/login', function (req, res) {
     console.log(redirect_uri)
     var state = generateRandomString(16);
@@ -139,7 +141,7 @@ if (state === null || state !== storedState) {
       grant_type: 'authorization_code'
     },
     headers: {
-      'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+      'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
     },
     json: true
   };
@@ -159,14 +161,15 @@ if (state === null || state !== storedState) {
       // use the access token to access the Spotify Web API
       request.get(options, function(error, response, body) {
         console.log(body);
+        res.render('profile/profile', {body})
     });
     
     // we can also pass the token to the browser to make requests from there
-    res.redirect('/#' +
+    // res.redirect('/#' +
     querystring.stringify({
-        access_token: access_token,
-        refresh_token: refresh_token
-    }));
+        // access_token: access_token,
+        // refresh_token: refresh_token
+    })
 } else {
     res.redirect('/#' +
     querystring.stringify({
@@ -175,7 +178,6 @@ if (state === null || state !== storedState) {
 }
 });
 }
-// res.render('profile/profile', {test: "another test"})
 })
 
 // call on routes page 
