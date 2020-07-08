@@ -22,9 +22,9 @@ var cors = require('cors')
 var querystring = require('querystring')
 var cookieParser = require('cookie-parser')
 
-var client_id = 'CLIENT_ID'
-var client_secret = 'CLIENT_SECRET'
-var redirect_uri = 'http://localhost:3000/'
+var client_id = process.env.CLIENT_ID
+var client_secret = process.env.CLIENT_SECRET
+var redirect_uri = process.env.REDIRECT_URI
 
 // generates random string containing numbers and letters
 
@@ -57,6 +57,7 @@ app.use(ejsLayouts)
 app.use(require('morgan')('dev'))
 app.use(helmet())
 
+
 // sequelize store class 
 const sessionStore = new SequelizeStore({
     db: db.sequelize,
@@ -72,12 +73,14 @@ app.use(session({
 }))
 
 sessionStore.sync()
+app.use(express.static(__dirname + '/public'))
+.use(cors())
+.use(cookieParser());
 
 // initialize flash messages, passport, and sessions 
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
-
 
 
 // directs us to the next route 
@@ -94,52 +97,16 @@ app.get('/', function(req, res) {
     res.render('index')
 })
 
-app.get('/profile', isLoggedIn, function(req, res) {
-    res.render('profile', {test: "another test"})
-})
-
-// call on routes page 
-app.use('/route', require('./controllers/auth'))
-
-// authenticate 
-// app.get('/login', function(req, res) {
-//     var scopes = 'user-read-private user-read-email';
-//     res.redirect('https://accounts.spotify.com/authorize' +
-//       '?response_type=code' +
-//       '&client_id=' + my_client_id +
-//       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-//       '&redirect_uri=' + encodeURIComponent(redirect_uri));
-//     });
-
-    app.use(express.static(__dirname + '/public'))
-   .use(cors())
-   .use(cookieParser());
-
-app.get('/login', function(req, res) {
-
-var state = generateRandomString(16);
-res.cookie(stateKey, state);
-
-
-// your application requests authorization
-var scope = 'user-read-private user-read-email';
-res.redirect('https://accounts.spotify.com/authorize?' +
-  querystring.stringify({
-    response_type: 'code',
-    client_id: client_id,
-    scope: scope,
-    redirect_uri: redirect_uri,
-    state: state
-  }));
-})
-app.get('/callback', function(req, res) {
-
-// your application requests refresh and access tokens
+app.get('/profile', function(req, res) {
+    // your application requests refresh and access tokens
 // after checking the state parameter
+console.log('🌞')
 
 var code = req.query.code || null;
 var state = req.query.state || null;
 var storedState = req.cookies ? req.cookies[stateKey] : null;
+
+console.log('req.cookies =', req.cookies ,'code = ', code, 'state =', state, 'storedState=', storedState)
 
 if (state === null || state !== storedState) {
   res.redirect('/#' +
@@ -176,23 +143,57 @@ if (state === null || state !== storedState) {
       // use the access token to access the Spotify Web API
       request.get(options, function(error, response, body) {
         console.log(body);
-      });
-
-      // we can also pass the token to the browser to make requests from there
-      res.redirect('/#' +
-        querystring.stringify({
-          access_token: access_token,
-          refresh_token: refresh_token
-        }));
-    } else {
-      res.redirect('/#' +
-        querystring.stringify({
-          error: 'invalid_token'
-        }));
-    }
-  });
+    });
+    
+    // we can also pass the token to the browser to make requests from there
+    res.redirect('/#' +
+    querystring.stringify({
+        access_token: access_token,
+        refresh_token: refresh_token
+    }));
+} else {
+    res.redirect('/#' +
+    querystring.stringify({
+        error: 'invalid_token'
+    }));
 }
 });
+}
+// res.render('profile/profile', {test: "another test"})
+})
+
+// call on routes page 
+app.use('/route', require('./controllers/auth'))
+
+// authenticate 
+// app.get('/login', function(req, res) {
+//     var scopes = 'user-read-private user-read-email';
+//     res.redirect('https://accounts.spotify.com/authorize' +
+//       '?response_type=code' +
+//       '&client_id=' + my_client_id +
+//       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+//       '&redirect_uri=' + encodeURIComponent(redirect_uri));
+//     });
+
+
+app.get('/login', function(req, res) {
+console.log(redirect_uri)
+var state = generateRandomString(16);
+res.cookie(stateKey, state);
+
+
+// your application requests authorization
+var scope = 'user-read-private user-read-email';
+res.redirect('https://accounts.spotify.com/authorize?' +
+  querystring.stringify({
+    response_type: 'code',
+    client_id: client_id,
+    scope: scope,
+    redirect_uri: redirect_uri,
+    state: state
+  }));
+})
+
 
 app.get('/refresh_token', function(req, res) {
 
