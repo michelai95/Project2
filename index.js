@@ -93,8 +93,24 @@ app.use(function(req, res, next) {
 
 // ROUTES 
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.render('index')
+})
+app.get('/login', function (req, res) {
+    console.log(redirect_uri)
+    var state = generateRandomString(16);
+    res.cookie(stateKey, state);
+
+    // your application requests authorization
+    var scope = 'user-read-private user-read-email';
+    res.redirect('https://accounts.spotify.com/authorize?' +
+        querystring.stringify({
+            response_type: 'code',
+            client_id: client_id,
+            scope: scope,
+            redirect_uri: redirect_uri,
+            state: state
+        }));
 })
 
 app.get('/profile', function(req, res) {
@@ -175,33 +191,13 @@ app.use('/route', require('./controllers/auth'))
 //       '&redirect_uri=' + encodeURIComponent(redirect_uri));
 //     });
 
-
-app.get('/login', function(req, res) {
-console.log(redirect_uri)
-var state = generateRandomString(16);
-res.cookie(stateKey, state);
-
-
-// your application requests authorization
-var scope = 'user-read-private user-read-email';
-res.redirect('https://accounts.spotify.com/authorize?' +
-  querystring.stringify({
-    response_type: 'code',
-    client_id: client_id,
-    scope: scope,
-    redirect_uri: redirect_uri,
-    state: state
-  }));
-})
-
-
 app.get('/refresh_token', function(req, res) {
 
 // requesting access token from refresh token
 var refresh_token = req.query.refresh_token;
 var authOptions = {
   url: 'https://accounts.spotify.com/api/token',
-  headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+  headers: { 'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64')) },
   form: {
     grant_type: 'refresh_token',
     refresh_token: refresh_token
@@ -218,9 +214,6 @@ request.post(authOptions, function(error, response, body) {
   }
 });
 });
-
-// console.log('Listening on 8888');
-// app.listen(8888)
 
 // initialize Server 
 app.listen(process.env.PORT || 3000, () => {
