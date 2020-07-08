@@ -8,6 +8,9 @@
     <div class="container">
         <h1>Welcome to your Groove Station!</h1>
     </div>
+    <div class="profileLink">
+        <a href="/logout">Logout</a> 
+    </div>
 </head>
 <body>
     <div>
@@ -24,7 +27,7 @@
         <h3><%= body.followers.total %></h3>
     </div>
     <div class="profileDetails">
-        <img src="<%= body.images.url %>">
+        <img src="<%= body.images[0].url %>">
     </div>
 </body>
 </html>

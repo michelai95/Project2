@@ -8,55 +8,55 @@ const { Router } = require('express')
 
 // ROUTES 
 // register get route 
-router.get('/register', function(req, res) {
-    db.user.findOrCreate({
-        where: {
-            email: req.body.email
-        }, defaults: {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            password: req.body.password,
-            age: req.body.age,
-            birthday: req.body.birthday
-        }
-    })
-})
+// router.get('/register', function(req, res) {
+//     db.user.findOrCreate({
+//         where: {
+//             email: req.body.email
+//         }, defaults: {
+//             firstName: req.body.firstName,
+//             lastName: req.body.lastName,
+//             password: req.body.password,
+//             age: req.body.age,
+//             birthday: req.body.birthday
+//         }
+//     })
+// })
 
 // register post route 
-router.post('/register', function(req, res) {
-    db.user.findOrCreate({
-        where: {
-            email: req.body.email
-        }, defaults: {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            password: req.body.password,
-            age: req.body.age,
-            birthday: req.body.birthday
-        }
-    }).then(function([user, created]) {
-        // if user was created 
-        if (created) {
-            // authenticate user and start authorization process
-            console.log('user is created')
-            passport.authenticate('local', {
-                successRedirect: '/profile',
-                successFlash: 'Thanks for registering!'
-            })(req, res)
-        } else {
-            console.log('User email already exists!')
-            req.flash('error', 'Error: email already exists for user. Try again')
-            res.redirect('/auth/register')
-        }
-        // else if user already exists
-            // send error to user that email already exists
-            // redirect back to registration get route/page
-    }).catch(function(err) {
-        console.log(`Error found. \nMessage: ${err.message} \nPlease review - ${err}`)
-        req.flash('error', err.message)
-        res.redirect('/auth/register')
-    })
-})
+// router.post('/register', function(req, res) {
+//     db.user.findOrCreate({
+//         where: {
+//             email: req.body.email
+//         }, defaults: {
+//             firstName: req.body.firstName,
+//             lastName: req.body.lastName,
+//             password: req.body.password,
+//             age: req.body.age,
+//             birthday: req.body.birthday
+//         }
+//     }).then(function([user, created]) {
+//         // if user was created 
+//         if (created) {
+//             // authenticate user and start authorization process
+//             console.log('user is created')
+//             passport.authenticate('local', {
+//                 successRedirect: '/profile',
+//                 successFlash: 'Thanks for registering!'
+//             })(req, res)
+//         } else {
+//             console.log('User email already exists!')
+//             req.flash('error', 'Error: email already exists for user. Try again')
+//             res.redirect('/auth/register')
+//         }
+//         // else if user already exists
+//             // send error to user that email already exists
+//             // redirect back to registration get route/page
+//     }).catch(function(err) {
+//         console.log(`Error found. \nMessage: ${err.message} \nPlease review - ${err}`)
+//         req.flash('error', err.message)
+//         res.redirect('/auth/register')
+//     })
+// })
 
 // // login get route 
 // router.get('/login', function(req, res) {
