@@ -22,6 +22,53 @@ const { Router } = require('express')
 //     })
 // })
 
+
+// ROUTE for creating a playlist 
+router.post('/users/{playlist_id}/playlists', function (req, res) {
+    db.playlist.findOrCreate({
+        "name": "New Playlist",
+        "description": "New playlist description",
+        "public": false
+    })
+})
+
+// ROUTE for viewing User's playlists 
+router.get('/playlists', function (req, res) {
+    db.playlist.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then((playlist) => {
+        var playlistUrl = `https://spotify.com/api/v1/me/playlists` + `${playlist.id}`
+        console.log(playlist)
+        axios.get(playlistUrl).then(function (apiResponse) {
+            var playlist = apiResponse.data
+            res.render('playlist/show', { playlist: playlist, id: req.params.id })
+        })
+    }).catch((error) => {
+        console.log(error)
+    })
+})
+
+// DELETE route for deleting tracks from playlists 
+router.delete('/track', function (req, res) {
+    db.playlist.destroy({
+        "tracks": [
+            {
+                "uri": "spotify:track:2DB2zVP1LVu6jjyrvqD44z",
+                "positions": [
+                    0
+                ]
+            },
+            {
+                "uri": "spotify:track:5ejwTEOCsaDEjvhZTcU6lg",
+                "positions": [
+                    1
+                ]
+            }
+        ]
+    }).then(res.redirect('/playlist'))
+})
 // register post route 
 // router.post('/register', function(req, res) {
 //     db.user.findOrCreate({
@@ -95,7 +142,7 @@ const { Router } = require('express')
 
 
 // logout get route 
-router.get('/logout', function(req, res) {
+router.get('/logout', function (req, res) {
     req.logout()
     res.redirect('/')
 })

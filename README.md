@@ -15,13 +15,13 @@
 - [X] a button that allows you to register if you haven't created an account 
 
 ## register 
-- [ ] a form with the following
-    - [ ] name
-    - [ ] password
-    - [ ] email
-    - [ ] birthday
-    - [ ] location
-- [ ] message that flashes once the profile has been created 
+- [X] a form with the following
+    - [X] name
+    - [X] password
+    - [X] email
+    - [X] birthday
+    - [X] location
+- [X] message that flashes once the profile has been created 
 
 ## profile 
 - [ ] will show playlist created of favorite songs

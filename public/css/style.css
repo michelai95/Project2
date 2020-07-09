@@ -1,8 +1,50 @@
 .container {
     color: rgb(190, 54, 179);
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family: 'Luckiest Guy', cursive;
+    text-shadow: 0px 1px white;
+    font-weight: bold;
+    size: 80px;
 }
 .description {
-    color: rgb(190, 54, 179);
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: white;
+    font-family: 'Raleway', sans-serif;
+    size: 75px;
 }
+body {
+    background: black;
+    text-align: center;
+}
+
+/* .text-center {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 90px;
+    text-shadow: 0px 1px white;
+} */
+
+.btn {
+    size: 30px;
+}
+
+.profileDetails {
+    color: white;
+    font-family: 'Raleway', sans-serif;
+}
+.link {
+    font-family: 'Homemade Apple', cursive;
+    color: rgb(167, 59, 209);
+}
+.ml15 {
+    font-weight: 800;
+    font-size: 3.8em;
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 80px;
+    font-weight: lighter;
+    text-shadow: 0px 1px white;
+  }
+  
+  .ml15 .word {
+    display: inline-block;
+    line-height: 1em;
+  }

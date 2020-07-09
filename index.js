@@ -1,6 +1,6 @@
 // required NPM libraries 
 require('dotenv').config()
-const Express = require('express')
+// const Express = require('express')
 const ejsLayouts = require('express-ejs-layouts')
 
 // require all middleware
@@ -44,15 +44,14 @@ var stateKey = 'spotify_auth_state'
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
 // APP setup
-const app = Express()
-app.use(Express.urlencoded({extended: false}))
-app.use(Express.static(__dirname + '/public'))
+const app = express()
+app.use(express.urlencoded({extended: false}))
+app.use(express.static(__dirname + '/public'))
 app.set('view engine', 'ejs')
 app.use(ejsLayouts)
 app.use(require('morgan')('dev'))
 app.use(helmet())
-app.use('/auth', require('./controllers/auth'))
-
+app.use(express.static('public'))
 
 // sequelize store class 
 const sessionStore = new SequelizeStore({
@@ -83,7 +82,7 @@ app.use(flash())
 app.use(function(req, res, next) {
     res.locals.alerts = req.flash()
     res.locals.currentUser = req.user
-
+    
     next()
 })
 
@@ -112,160 +111,156 @@ app.get('/login', function (req, res) {
 })
 
 // app.get('/login', function(req, res) {
-//     var scopes = 'user-read-private user-read-email';
-//     res.redirect('https://accounts.spotify.com/authorize' +
-//       '?response_type=code' +
-//       '&client_id=' + my_client_id +
-//       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-//       '&redirect_uri=' + encodeURIComponent(redirect_uri));
-//     });
-
-app.get('/profile', function(req, res) {
-    // your application requests refresh and access tokens
-// after checking the state parameter
-console.log('🌞')
-
-var code = req.query.code || null;
-var state = req.query.state || null;
-var storedState = req.cookies ? req.cookies[stateKey] : null;
-
-if (state === null || state !== storedState) {
-  res.redirect('/#' +
-    querystring.stringify({
-      error: 'state_mismatch'
-    }));
-} else {
-  res.clearCookie(stateKey);
-  var authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: {
-      code: code,
-      redirect_uri: redirect_uri,
-      grant_type: 'authorization_code'
-    },
-    headers: {
-      'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
-    },
-    json: true
-  };
-
-  request.post(authOptions, function(error, response, body) {
-    if (!error && response.statusCode === 200) {
-
-      var access_token = body.access_token,
-          refresh_token = body.refresh_token;
-
-      var options = {
-        url: 'https://api.spotify.com/v1/me',
-        headers: { 'Authorization': 'Bearer ' + access_token },
-        json: true
-      };
-
-      // use the access token to access the Spotify Web API
-      request.get(options, function(error, response, body) {
-        res.render('profile/profile', {body})
-    });
+    //     var scopes = 'user-read-private user-read-email';
+    //     res.redirect('https://accounts.spotify.com/authorize' +
+    //       '?response_type=code' +
+    //       '&client_id=' + my_client_id +
+    //       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+    //       '&redirect_uri=' + encodeURIComponent(redirect_uri));
+    //     });
     
-    // we can also pass the token to the browser to make requests from there
-    // res.redirect('/#' +
-    querystring.stringify({
-    })
-} else {
-    res.redirect('/#' +
-    querystring.stringify({
-        error: 'invalid_token'
-    }));
-}
-});
-}
-})
-
-// app.get('/', function(req, res) {
-//     req.query.playlist 
-//     var playlistOptions = {
-//         url: 'https://api.spotify.com/v1/users/{user_id}/playlists'
-//     }
-//     res.render('profile/profile', {body})
-// })
-
-// call on routes page 
-app.use('/route', require('./controllers/auth'))
-
-
-app.get('/refresh_token', function(req, res) {
-
-// requesting access token from refresh token
-var refresh_token = req.query.refresh_token;
-var authOptions = {
-  url: 'https://accounts.spotify.com/api/token',
-  headers: { 'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64')) },
-  form: {
-    grant_type: 'refresh_token',
-    refresh_token: refresh_token
-  },
-  json: true
-};
-
-request.post(authOptions, function(error, response, body) {
-  if (!error && response.statusCode === 200) {
-    var access_token = body.access_token;
-    res.send({
-      'access_token': access_token
-    });
-  }
-});
-});
-
-app.get('/register', function(req, res) {
-    db.user.findOrCreate({
-        where: {
-            email: req.body.email
-        }, defaults: {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            password: req.body.password,
-            age: req.body.age,
-            birthday: req.body.birthday
-        }
-    })
-})
-
-app.post('/register', function(req, res) {
-    db.user.findOrCreate({
-        where: {
-            email: req.body.email
-        }, defaults: {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            password: req.body.password,
-            age: req.body.age,
-            birthday: req.body.birthday
-        }
-    }).then(function([user, created]) {
-        if (created) {
-            console.log('user is created')
-            passport.authenticate('local', {
-                successRedirect: '/profile',
-                successFlash: 'Thanks for registering!'
-            })(req, res)
+    app.get('/profile', function(req, res) {
+        // your application requests refresh and access tokens
+        // after checking the state parameter
+        console.log('🌞')
+        
+        var code = req.query.code || null;
+        var state = req.query.state || null;
+        var storedState = req.cookies ? req.cookies[stateKey] : null;
+        
+        if (state === null || state !== storedState) {
+            res.redirect('/#' +
+            querystring.stringify({
+                error: 'state_mismatch'
+            }));
         } else {
-            console.log('User email already exists!')
-            req.flash('error', 'Error: email already exists for user. Try again')
-            res.redirect('/auth/register')
+            res.clearCookie(stateKey);
+            var authOptions = {
+                url: 'https://accounts.spotify.com/api/token',
+                form: {
+                    code: code,
+                    redirect_uri: redirect_uri,
+                    grant_type: 'authorization_code'
+                },
+                headers: {
+                    'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+                },
+                json: true
+            };
+            
+            request.post(authOptions, function(error, response, body) {
+                if (!error && response.statusCode === 200) {
+                    
+                    var access_token = body.access_token,
+                    refresh_token = body.refresh_token;
+                    
+                    var options = {
+                        url: 'https://api.spotify.com/v1/me',
+                        headers: { 'Authorization': 'Bearer ' + access_token },
+                        json: true
+                    };
+                    
+                    // use the access token to access the Spotify Web API
+                    request.get(options, function(error, response, body) {
+                        res.render('profile/profile', {body})
+                    });
+                    
+                    // we can also pass the token to the browser to make requests from there
+                    // res.redirect('/#' +
+                    querystring.stringify({
+                    })
+                } else {
+                    res.redirect('/#' +
+                    querystring.stringify({
+                        error: 'invalid_token'
+                    }));
+                }
+            });
         }
-    }).catch(function(err) {
-        console.log(`Error found. \nMessage: ${err.message} \nPlease review - ${err}`)
-        req.flash('error', err.message)
-        res.redirect('/auth/register')
     })
-})
+    
+    
+    /*--------- TA Help ------- */ 
 
-app.get('/logout', function(req, res) {
-    req.logout()
-    res.redirect('/')
-})
+    // app.get(function(req, res) {
+    //     var playlistUrl = 'https://api.spotify.com/v1/playlists'
+    //     axios.get(playlistUrl)
+    //         .then(function (apiResponse) {
+    //             var playlist = apiResponse.data.results
+    //             res.render('profile', { playlist: playlist })
+    //         })
+    // })
+    
+    // // POST route for creating a playlist 
+    // app.post('/', function (req, res) {
+    //     var playlistUrl = 'https://api.spotify.com/v1/{user_id}/playlists'
+    //     axios.get(playlistUrl).then(function (apiResponse) {
+    //         var playlist = apiResponse.data.results
+    //         res.render('profile/profile', { playlist })
+    //     })
+    // }).then( // POST route for adding items to a playlist 
+    //     app.post('/', function (req, res) {
+    //         var playlistUrl = 'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
+    //         axios.get(playlistUrl).then(function (apiResponse) {
+    //             var playlist = apiResponse.data.results
+    //             req.render('profile/profile', { playlist: req.params.playlist })
+    //         })
+    //     }))
+        
+    //     // DELETE route for removing items from a playlist 
+    //         app.delete('/', function (req, res) {
+    //             var playlistUrl = 'https://api.spotify.com/v1/{playlist_id}/tracks'
+    //             axios.get(playlistUrl).then(function (apiResponse) {
+    //                 var playlist = apiResponse.data.results
+    //                 req.direct('profile/profile',)
+    //             })
+    //         })
 
-// initialize Server 
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`firing on all ${process.env.PORT} cylinders`)
-})
+
+    // TODO find way to search for user by id 
+    // find way to search for song by id 
+    // STRETCH
+    // PUT route for replacing items on playlist - stretch goal     
+    
+
+    // Token refresh route 
+    app.get('/refresh_token', function(req, res) {
+        
+        // requesting access token from refresh token
+        var refresh_token = req.query.refresh_token;
+        var authOptions = {
+            url: 'https://accounts.spotify.com/api/token',
+            headers: { 'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64')) },
+            form: {
+                grant_type: 'refresh_token',
+                refresh_token: refresh_token
+            },
+            json: true
+        };
+        
+        request.post(authOptions, function(error, response, body) {
+            if (!error && response.statusCode === 200) {
+                var access_token = body.access_token;
+                res.send({
+                    'access_token': access_token
+                });
+            }
+        });
+    });
+
+    app.get('/playlist', function(req, res, body) {
+        res.render('profile/playlist', {body})
+    })
+    
+    app.get('/logout', function(req, res) {
+        req.logout()
+        res.redirect('/')
+    })
+
+    // call on routes from controller folder 
+    // app.use('/auth', require('controllers/auth'))
+    
+    // initialize Server 
+    app.listen(process.env.PORT || 3000, () => {
+        console.log(`firing on all ${process.env.PORT} cylinders`)
+    })
