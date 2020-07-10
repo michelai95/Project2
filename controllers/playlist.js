@@ -13,106 +13,50 @@ var spotify = new Spotify({
     secret: process.env.CLIENT_SECRET
 });
 
-router.get('/:id', function (req, res) {
+// either move below search or change url to '/user/:id'
+router.get('/users/:id', function (req, res) {
     spotify
         .request(`https://api.spotify.com/v1/users/${req.params.id}/playlists`)
         .then(function (data) {
-            // spotify
-            //     .request(`https://api.spotify.com/v1/me/tracks`)
-            //     .then(function (tracks) {
-                    console.log(data)
-                    res.render('playlist/playlist', {data})
-            //     }).catch(function (err) {
-            //         console.log(err);
-            //     })
-}).catch (function(err) {
-    console.log(err);
-});
-})
-
-router.put('/:id', function(req, res) {
-    spotify
-    .request(`https://api.spotify.com/v1/me/tracks`)
-    .then(function(tracks) {
-        db.song.findOrCreate({
-            where: {
-                ids: [req.params.id]
-            }
+            console.log(data.items[0].tracks)
+            res.render('playlist/playlist', { data })
+        }).catch(function (err) {
+            console.log(err);
         })
-    })
+});
+
+router.get('/search/:name', function (req, res) {
+    spotify
+        .search({ type: 'track', query: req.params.name }, function (err, data) {
+            if (err) {
+                return console.log('Error occurred' + err)
+            }
+            console.log(data)
+        })
+        .then(function (tracks) {
+            console.log('saved')
+            // render page for searched songs 
+            // add search bar 
+            // connect ejs file to next route (put to update song to spotify)
+            res.render('/songs/songs')
+        }).catch(function (err) {
+            console.log(err)
+        })
 })
 
-// // should provide a list of songs the user has liked/saved 
-// router.post('/:id/tracks', function(req, res) {
-//     spotify
-//     .request(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`)
-//     .then(function (tracks) {
-//         db.song.findAll({
-//             where: {
-//                 track: req.body.name,
-//                 id: req.params.id,
-//                 artists: req.body.name
-//             }
-//         }).then(newSong => {
-//             res.redirect('/:id/', {tracks: tracks, id: req.params.id})
-//             console.log(tracks)
-//         })
-//     }).catch(function(err) {
-//         console.log(err)
-//     })
-// })
+
 
 // // should delete a song from the users library 
-// router.delete('/:id/tracks/:id', function(req, res) {
-//     spotify
-//     .request(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`)
-//     db.song.findOne({
-//         where: {
-//             ids: req.params.id
-//         }
-//     }).then(function (tracks) {
-//         res.redirect('/:id/tracks/', )
-//     })
-// })
-
-/*--------- TA Help ------- */
-
-// // POST route for creating a playlist 
-// app.post('/', function (req, res) {
-//     var playlistUrl = 'https://api.spotify.com/v1/{user_id}/playlists'
-//     axios.get(playlistUrl).then(function (apiResponse) {
-//         var playlist = apiResponse.data.results
-//         res.render('profile/profile', { playlist })
-//     })
-// }).then( // POST route for adding items to a playlist 
-//     app.post('/', function (req, res) {
-//         var playlistUrl = 'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
-//         axios.get(playlistUrl).then(function (apiResponse) {
-//             var playlist = apiResponse.data.results
-//             req.render('profile/profile', { playlist: req.params.playlist })
-//         })
-//     }))
-
-
-
-// // DELETE route for removing items from a playlist 
-// app.delete('id/tracks', function (req, res) {
-//     db.song.destory({
-//         "tracks": [
-//             {
-//                 "uri": "spotify:track:2DB2zVP1LVu6jjyrvqD44z",
-//                 "positions": [
-//                     0
-//                 ]
-//             },
-//             {
-//                 "uri": "spotify:track:5ejwTEOCsaDEjvhZTcU6lg",
-//                 "positions": [
-//                     1
-//                 ]
-//             }
-//         ]
-//         }).then(res.redirect('/playlist/id'))
-//     })
+router.delete('/:id', function (req, res) {
+    spotify
+        .request(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`)
+    db.song.destroy({
+        where: {
+            id: req.params.id
+        }
+    }).then(function (tracks) {
+        res.redirect('/')
+    })
+})
 
 module.exports = router

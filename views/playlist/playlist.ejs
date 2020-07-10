@@ -14,8 +14,8 @@
     <form method="POST" action="/tracks"></form>
 </body>
 <div class="tracks">
-    <h3><% for(var i=0; i<data.length; i++) { %></h3>
-        <h3><%= data[i].name %> </h3>
+    <% for(var i=0; i<data.items.length; i++) { %>
+        <h3 class="tracks"><%= data.items[i].name %> </h3>
         <tr>
             <% } %>
         </tr>

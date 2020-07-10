@@ -24,11 +24,10 @@
 - [X] message that flashes once the profile has been created 
 
 ## profile 
-- [/] will show playlist created of favorite songs
+- [X] will show playlist created of favorite songs
 - [/] will have an option for you to add another song
 - [/] will give you the ability to delete a song from your playlist 
 - [ ] ability to search for a specific song by id 
-- [ ] ability to search for user with specific id
 
 ![](IMG_3005.jpeg)
 ![](IMG_3006.jpeg)
@@ -54,6 +53,7 @@
 ## profile
 - [X] will show a picture of you
 - [X] will show your profile info (birthday, location, etc.)
+- [ ] ability to search for user with specific id
 
 
 ## citations
