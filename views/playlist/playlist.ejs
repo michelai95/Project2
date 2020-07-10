@@ -3,12 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Raleway&display=swap" rel="stylesheet">
     <title>Favorite Grooves</title>
 </head>
 <body>
-    <h1>Home of your favorites tunes - <br>
-    feel free to adjust your vibe at any time by adding <br>
+    <p class="playlistDescription">Home of your favorites tunes - <br>
+    feel free to adjust your playlist at any time by adding <br>
     or deleting and songs from your playlist</h1>
-    <form method="POST" action="/create"></form>
+    <form method="POST" action="/tracks"></form>
 </body>
+<div class="tracks">
+    <h3><% for(var i=0; i<data.length; i++) { %></h3>
+        <h3><%= data[i].name %> </h3>
+        <tr>
+            <% } %>
+        </tr>
+</div>
+<div class="playlistDetails">
+</div>
 </html>

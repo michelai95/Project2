@@ -3,7 +3,7 @@
 ## MVP 
 
 ## homepage 
-- [ ] a homepage with a Jukebox in the background 
+- [x] a homepage with a Jukebox in the background 
 - [X] a login button for users 
 - [X] a register button for users 
 - [X] a description for what you can do with the application 
@@ -24,9 +24,9 @@
 - [X] message that flashes once the profile has been created 
 
 ## profile 
-- [ ] will show playlist created of favorite songs
-- [ ] will have an option for you to add another song
-- [ ] will give you the ability to delete a song from your playlist 
+- [/] will show playlist created of favorite songs
+- [/] will have an option for you to add another song
+- [/] will give you the ability to delete a song from your playlist 
 - [ ] ability to search for a specific song by id 
 - [ ] ability to search for user with specific id
 
@@ -41,7 +41,7 @@
 ## FLEXIN
 
 ## homepage
-- [ ] include anime.js on the homepage somehow
+- [X] include anime.js on the homepage somehow
 - [ ] create a carousel effect with artists albums
 
 ## login
@@ -52,5 +52,14 @@
 - [ ] verify password check
 
 ## profile
-- [ ] will show a picture of you
-- [ ] will show your profile info (birthday, location, etc.)
+- [X] will show a picture of you
+- [X] will show your profile info (birthday, location, etc.)
+
+
+## citations
+
+- [ ] https://developer.spotify.com/documentation/general/guides/authorization-guide/
+- [ ] https://www.npmjs.com/package/node-spotify-api
+- [ ] https://stackoverflow.com/questions/15175312/increase-font-size-of-hyperlink-text-html
+- [ ] https://animejs.com/
+- [ ] https://www.pexels.com/photo/closeup-photography-of-jukebox-21088/

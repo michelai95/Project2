@@ -3,12 +3,23 @@
     font-family: 'Luckiest Guy', cursive;
     text-shadow: 0px 1px white;
     font-weight: bold;
-    size: 80px;
+}
+.container2 {
+    color: rgb(190, 54, 179);
+    font-family: 'Luckiest Guy', cursive;
+    text-shadow: 0px 1px white;
+    font-weight: bold;
+    font-size: 40px;
 }
 .description {
-    color: white;
+    color: rgb(185, 30, 185);
     font-family: 'Raleway', sans-serif;
-    size: 75px;
+    font-size: 28px;
+    margin-top: 90px;
+    font-weight: bolder;
+}
+.jukebox {
+    background-image: url(https://images.pexels.com/photos/21088/music-record-player-b-w-black-and-white-21088.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940);
 }
 body {
     background: black;
@@ -21,30 +32,45 @@ body {
     text-shadow: 0px 1px white;
 } */
 
-.btn {
-    size: 30px;
-}
-
 .profileDetails {
-    color: white;
+    color: #ffffff;
     font-family: 'Raleway', sans-serif;
 }
 .link {
-    font-family: 'Homemade Apple', cursive;
-    color: rgb(167, 59, 209);
+    font-family: 'Bangers', cursive;
+    color: hsl(295, 29%, 52%);
 }
 .ml15 {
     font-weight: 800;
-    font-size: 3.8em;
+    font-size: 3.5em;
     text-transform: uppercase;
     letter-spacing: 0.5em;
     font-family: 'Luckiest Guy', cursive;
-    font-size: 80px;
+    font-size: 90px;
     font-weight: lighter;
     text-shadow: 0px 1px white;
-  }
-  
-  .ml15 .word {
+}
+
+.ml15 .word {
     display: inline-block;
     line-height: 1em;
+}
+a {
+    font-size: 40px;
+}
+a:link {
+    text-decoration: none;
   }
+  
+  a:visited {
+    text-decoration: none;
+  }
+.navBar {
+    font-family: 'Bangers', cursive;
+    color: hsl(295, 29%, 52%);
+    font-size: 20px;
+}
+.playlistDescription {
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+}

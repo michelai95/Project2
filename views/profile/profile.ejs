@@ -5,30 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Raleway&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
     <title>Groove Station</title>
-    <div class="container">
+    <div class="container2">
         <h1>Welcome to your Groove Station!</h1>
     </div>
-    <div class="link">
+    <nav class="navBar">
         <a href="/logout">Logout</a> 
-    </div>
-    <div class="link">
-        <a href="/playlist/<%= body.id %>" class="link">Let's Groove</a>
-    </div>
+        <a href="/playlist/<%= body.id %>">Let's Groove</a>
+    </nav>
 </head>
 <body>
     <div class="profileDetails">
         <h3><%= body.display_name %></h3>
     </div>
     <div class="profileDetails">
-        <h3>Groove Name: <%= body.id %></h3>
+        <h3>Username: <%= body.id %></h3>
     </div>
     <div class='profileDetails'>
         <h5>Email: <%= body.email %></h5>
     </div>
     <div class="profileDetails">
-        <h3>The amount of Groovers that dig your vibe!</h3>
+        <h3>Followers:</h3>
         <h3><%= body.followers.total %></h3>
     </div>
     <div class="profileDetails">

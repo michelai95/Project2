@@ -17,21 +17,63 @@ router.get('/:id', function (req, res) {
     spotify
         .request(`https://api.spotify.com/v1/users/${req.params.id}/playlists`)
         .then(function (data) {
-            spotify
-                .request(`https://api.spotify.com/v1/tracks`)
-                .then(function (tracks) {
-                    request.get(options, function(error, response, data, tracks) {
-                        res.render('profile/playlist', {data, tracks})
-                    })
-                    console.log(tracks)
-                }).catch(function (err) {
-                    console.log(err);
-                })
+            // spotify
+            //     .request(`https://api.spotify.com/v1/me/tracks`)
+            //     .then(function (tracks) {
+                    console.log(data)
+                    res.render('playlist/playlist', {data})
+            //     }).catch(function (err) {
+            //         console.log(err);
+            //     })
 }).catch (function(err) {
     console.log(err);
 });
 })
 
+router.put('/:id', function(req, res) {
+    spotify
+    .request(`https://api.spotify.com/v1/me/tracks`)
+    .then(function(tracks) {
+        db.song.findOrCreate({
+            where: {
+                ids: [req.params.id]
+            }
+        })
+    })
+})
+
+// // should provide a list of songs the user has liked/saved 
+// router.post('/:id/tracks', function(req, res) {
+//     spotify
+//     .request(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`)
+//     .then(function (tracks) {
+//         db.song.findAll({
+//             where: {
+//                 track: req.body.name,
+//                 id: req.params.id,
+//                 artists: req.body.name
+//             }
+//         }).then(newSong => {
+//             res.redirect('/:id/', {tracks: tracks, id: req.params.id})
+//             console.log(tracks)
+//         })
+//     }).catch(function(err) {
+//         console.log(err)
+//     })
+// })
+
+// // should delete a song from the users library 
+// router.delete('/:id/tracks/:id', function(req, res) {
+//     spotify
+//     .request(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`)
+//     db.song.findOne({
+//         where: {
+//             ids: req.params.id
+//         }
+//     }).then(function (tracks) {
+//         res.redirect('/:id/tracks/', )
+//     })
+// })
 
 /*--------- TA Help ------- */
 
