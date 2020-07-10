@@ -38,10 +38,20 @@ router.get('/:name', function (req, res) {
             // render page for searched songs 
             // add search bar 
             // connect ejs file to next route (put to update song to spotify)
-            res.render('songs/search', {results: results})
+            res.render('tracks/search', {results: results})
         }).catch(function (err) {
             console.log(err)
         })
+})
+
+router.post('/track', function(req, res) {
+    db.findOne({
+        where: {
+            name: req.params.name
+        }
+    }).then(function(track) {
+        db.song.create
+    })
 })
 
 // router.put('/add', function(req, res) {
@@ -54,7 +64,7 @@ router.get('/:name', function (req, res) {
 // })
 
 
-// // should delete a song from the users library 
+// should delete a song from the users library 
 router.delete('/:id', function (req, res) {
     spotify
         .request(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`)
@@ -63,7 +73,7 @@ router.delete('/:id', function (req, res) {
             id: req.params.id
         }
     }).then(function (tracks) {
-        res.redirect('/')
+        res.redirect('/playlist/playlist')
     })
 })
 

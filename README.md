@@ -27,7 +27,7 @@
 - [X] will show playlist created of favorite songs
 - [/] will have an option for you to add another song
 - [/] will give you the ability to delete a song from your playlist 
-- [X] ability to search for a specific song by id 
+- [/] ability to search for a specific song by id 
 
 ![](IMG_3005.jpeg)
 ![](IMG_3006.jpeg)
@@ -63,3 +63,4 @@
 - [ ] https://stackoverflow.com/questions/15175312/increase-font-size-of-hyperlink-text-html
 - [ ] https://animejs.com/
 - [ ] https://www.pexels.com/photo/closeup-photography-of-jukebox-21088/
+- [ ] https://github.com/spotify/web-api-auth-examples

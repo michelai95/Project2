@@ -19,7 +19,7 @@
     font-weight: bolder;
 }
 .jukebox {
-    background-image: url(https://images.pexels.com/photos/21088/music-record-player-b-w-black-and-white-21088.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940);
+    background-image: url('/img/IMG_white-21088.jpeg');
 }
 body {
     background: black;
