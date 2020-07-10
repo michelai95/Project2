@@ -10,6 +10,7 @@ const flash = require('connect-flash')
 const passport = require('./config/ppConfig')
 const db = require('./models')
 const isLoggedIn = require('./middleware/isLoggedIn')
+const Spotify = require('node-spotify-api');
 
 const express = require('express')
 var request = require('request')
@@ -20,17 +21,18 @@ var cookieParser = require('cookie-parser')
 var client_id = process.env.CLIENT_ID
 var client_secret = process.env.CLIENT_SECRET
 var redirect_uri = process.env.REDIRECT_URI
+let localStorage = require('localStorage')
 
 // generates random string containing numbers and letters
 
 // @param {number}
 // @return {string}
 
-var generateRandomString = function(length) {
+var generateRandomString = function (length) {
     var text = ""
     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
-    for(var i = 0; i < length; i++) {
+    for (var i = 0; i < length; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length))
     }
     return text
@@ -45,7 +47,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
 // APP setup
 const app = express()
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: false }))
 app.use(express.static(__dirname + '/public'))
 app.set('view engine', 'ejs')
 app.use(ejsLayouts)
@@ -69,8 +71,8 @@ app.use(session({
 
 sessionStore.sync()
 app.use(express.static(__dirname + '/public'))
-.use(cors())
-.use(cookieParser());
+    .use(cors())
+    .use(cookieParser());
 
 // initialize flash messages, passport, and sessions 
 app.use(passport.initialize())
@@ -79,10 +81,10 @@ app.use(flash())
 
 
 // directs us to the next route 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.locals.alerts = req.flash()
     res.locals.currentUser = req.user
-    
+
     next()
 })
 
@@ -97,170 +99,135 @@ app.get('/login', function (req, res) {
     console.log(redirect_uri)
     var state = generateRandomString(16);
     res.cookie(stateKey, state);
-    
+
     // your application requests authorization
     var scope = 'user-read-private user-read-email';
     res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-        response_type: 'code',
-        client_id: client_id,
-        scope: scope,
-        redirect_uri: redirect_uri,
-        state: state
-    }));
+        querystring.stringify({
+            response_type: 'code',
+            client_id: client_id,
+            scope: scope,
+            redirect_uri: redirect_uri,
+            state: state
+        }));
 })
 
-// app.get('/login', function(req, res) {
-    //     var scopes = 'user-read-private user-read-email';
-    //     res.redirect('https://accounts.spotify.com/authorize' +
-    //       '?response_type=code' +
-    //       '&client_id=' + my_client_id +
-    //       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-    //       '&redirect_uri=' + encodeURIComponent(redirect_uri));
-    //     });
-    
-    app.get('/profile', function(req, res) {
-        // your application requests refresh and access tokens
-        // after checking the state parameter
-        console.log('🌞')
-        
-        var code = req.query.code || null;
-        var state = req.query.state || null;
-        var storedState = req.cookies ? req.cookies[stateKey] : null;
-        
-        if (state === null || state !== storedState) {
-            res.redirect('/#' +
+
+app.get('/profile', function (req, res) {
+    // your application requests refresh and access tokens
+    // after checking the state parameter
+    console.log('🌞')
+
+    var code = req.query.code || null;
+    var state = req.query.state || null;
+    var storedState = req.cookies ? req.cookies[stateKey] : null;
+
+    if (state === null || state !== storedState) {
+        res.redirect('/#' +
             querystring.stringify({
                 error: 'state_mismatch'
             }));
-        } else {
-            res.clearCookie(stateKey);
-            var authOptions = {
-                url: 'https://accounts.spotify.com/api/token',
-                form: {
-                    code: code,
-                    redirect_uri: redirect_uri,
-                    grant_type: 'authorization_code'
-                },
-                headers: {
-                    'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
-                },
-                json: true
-            };
-            
-            request.post(authOptions, function(error, response, body) {
-                if (!error && response.statusCode === 200) {
-                    
-                    var access_token = body.access_token,
-                    refresh_token = body.refresh_token;
-                    
-                    var options = {
-                        url: 'https://api.spotify.com/v1/me',
-                        headers: { 'Authorization': 'Bearer ' + access_token },
-                        json: true
-                    };
-                    
-                    // use the access token to access the Spotify Web API
-                    request.get(options, function(error, response, body) {
-                        res.render('profile/profile', {body})
-                    });
-                    
-                    // we can also pass the token to the browser to make requests from there
-                    // res.redirect('/#' +
-                    querystring.stringify({
-                    })
-                } else {
-                    res.redirect('/#' +
-                    querystring.stringify({
-                        error: 'invalid_token'
-                    }));
-                }
-            });
-        }
-    })
-    
-    
-    /*--------- TA Help ------- */ 
-
-    // app.get(function(req, res) {
-    //     var playlistUrl = 'https://api.spotify.com/v1/playlists'
-    //     axios.get(playlistUrl)
-    //         .then(function (apiResponse) {
-    //             var playlist = apiResponse.data.results
-    //             res.render('profile', { playlist: playlist })
-    //         })
-    // })
-    
-    // // POST route for creating a playlist 
-    // app.post('/', function (req, res) {
-    //     var playlistUrl = 'https://api.spotify.com/v1/{user_id}/playlists'
-    //     axios.get(playlistUrl).then(function (apiResponse) {
-    //         var playlist = apiResponse.data.results
-    //         res.render('profile/profile', { playlist })
-    //     })
-    // }).then( // POST route for adding items to a playlist 
-    //     app.post('/', function (req, res) {
-    //         var playlistUrl = 'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
-    //         axios.get(playlistUrl).then(function (apiResponse) {
-    //             var playlist = apiResponse.data.results
-    //             req.render('profile/profile', { playlist: req.params.playlist })
-    //         })
-    //     }))
-        
-    //     // DELETE route for removing items from a playlist 
-    //         app.delete('/', function (req, res) {
-    //             var playlistUrl = 'https://api.spotify.com/v1/{playlist_id}/tracks'
-    //             axios.get(playlistUrl).then(function (apiResponse) {
-    //                 var playlist = apiResponse.data.results
-    //                 req.direct('profile/profile',)
-    //             })
-    //         })
-
-
-    // TODO find way to search for user by id 
-    // find way to search for song by id 
-    // STRETCH
-    // PUT route for replacing items on playlist - stretch goal     
-    
-
-    // Token refresh route 
-    app.get('/refresh_token', function(req, res) {
-        
-        // requesting access token from refresh token
-        var refresh_token = req.query.refresh_token;
+    } else {
+        res.clearCookie(stateKey);
         var authOptions = {
             url: 'https://accounts.spotify.com/api/token',
-            headers: { 'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64')) },
             form: {
-                grant_type: 'refresh_token',
-                refresh_token: refresh_token
+                code: code,
+                redirect_uri: redirect_uri,
+                grant_type: 'authorization_code'
+            },
+            headers: {
+                'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
             },
             json: true
         };
-        
-        request.post(authOptions, function(error, response, body) {
+
+        request.post(authOptions, function (error, response, body) {
             if (!error && response.statusCode === 200) {
-                var access_token = body.access_token;
-                res.send({
-                    'access_token': access_token
+
+                var access_token = body.access_token,
+                refresh_token = body.refresh_token;
+                localStorage.setItem('spotifyToken', access_token)
+                var options = {
+                    url: 'https://api.spotify.com/v1/me',
+                    headers: { 'Authorization': 'Bearer ' + access_token },
+                    json: true
+                };
+
+                // use the access token to access the Spotify Web API
+                request.get(options, function (error, response, body) {
+                    res.render('profile/profile', { body })
                 });
+
+                // we can also pass the token to the browser to make requests from there
+                // res.redirect('/#' +
+                querystring.stringify({
+                })
+            } else {
+                res.redirect('/#' +
+                    querystring.stringify({
+                        error: 'invalid_token'
+                    }));
             }
         });
+    }
+})
+
+
+// TODO find way to search for user by id 
+// find way to search for song by id 
+// STRETCH
+// PUT route for replacing items on playlist - stretch goal     
+
+// Token refresh route 
+app.get('/refresh_token', function (req, res) {
+
+    // requesting access token from refresh token
+    var refresh_token = req.query.refresh_token;
+    var authOptions = {
+        url: 'https://accounts.spotify.com/api/token',
+        headers: { 'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64')) },
+        form: {
+            grant_type: 'refresh_token',
+            refresh_token: refresh_token
+        },
+        json: true
+    };
+
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            var access_token = body.access_token;
+            res.send({
+                'access_token': access_token
+            });
+        }
     });
+});
 
-    app.get('/playlist', function(req, res, body) {
-        res.render('profile/playlist', {body})
-    })
-    
-    app.get('/logout', function(req, res) {
-        req.logout()
-        res.redirect('/')
-    })
+app.get('/playlist', function (req, res, body) {
+    res.render('playlist/playlist', { body })
+})
 
-    // call on routes from controller folder 
-    // app.use('/auth', require('controllers/auth'))
-    
-    // initialize Server 
-    app.listen(process.env.PORT || 3000, () => {
-        console.log(`firing on all ${process.env.PORT} cylinders`)
-    })
+app.get('/logout', function (req, res) {
+    req.logout()
+    res.redirect('/')
+})
+
+// call on routes from controller folder 
+app.use('/auth', require('./controllers/auth'))
+app.use('/playlist', require('./controllers/playlist'))
+
+// initialize Server 
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`firing on all ${process.env.PORT} cylinders`)
+})
+
+/*--------- Grave Yard -------*/
+ // app.get('/login', function(req, res) {
+ //     var scopes = 'user-read-private user-read-email';
+  //     res.redirect('https://accounts.spotify.com/authorize' +
+  //       '?response_type=code' +
+  //       '&client_id=' + my_client_id +
+  //       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+ //       '&redirect_uri=' + encodeURIComponent(redirect_uri));
+ //     });

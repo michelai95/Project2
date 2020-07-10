@@ -14,11 +14,11 @@
         <a href="/logout">Logout</a> 
     </div>
     <div class="link">
-        <a href="/playlist" class="link">Let's Groove</a>
+        <a href="/playlist/<%= body.id %>" class="link">Let's Groove</a>
     </div>
 </head>
 <body>
-    <div>
+    <div class="profileDetails">
         <h3><%= body.display_name %></h3>
     </div>
     <div class="profileDetails">
