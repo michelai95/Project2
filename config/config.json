@@ -4,7 +4,7 @@
     "host": "127.0.0.1",
     "dialect": "postgres"},
   "test": {
-    "database": "projectdb",
+    "database": "jukebox",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
