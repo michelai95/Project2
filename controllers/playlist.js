@@ -14,7 +14,7 @@ var spotify = new Spotify({
 });
 
 // either move below search or change url to '/user/:id'
-router.get('/users/:id', function (req, res) {
+router.get('/:id', function (req, res) {
     spotify
         .request(`https://api.spotify.com/v1/users/${req.params.id}/playlists`)
         .then(function (data) {
@@ -25,25 +25,33 @@ router.get('/users/:id', function (req, res) {
         })
 });
 
-router.get('/search/:name', function (req, res) {
+router.get('/:name', function (req, res) {
     spotify
-        .search({ type: 'track', query: req.params.name }, function (err, data) {
+        .search({ type: 'track', query: req.query.name }, function (err, data) {
             if (err) {
                 return console.log('Error occurred' + err)
             }
             console.log(data)
         })
-        .then(function (tracks) {
-            console.log('saved')
+        .then(function (data) {
+            console.log(data)
             // render page for searched songs 
             // add search bar 
             // connect ejs file to next route (put to update song to spotify)
-            res.render('/songs/songs')
+            res.render('songs/search', {results: results})
         }).catch(function (err) {
             console.log(err)
         })
 })
 
+// router.put('/add', function(req, res) {
+//     spotify
+//     .request(`https://api.spotify.com/v1/me/tracks`)
+//     .then(function(data) {
+//         console.log('added')
+//         res.send('/songs', {data})
+//     })
+// })
 
 
 // // should delete a song from the users library 

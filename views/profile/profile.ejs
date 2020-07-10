@@ -11,26 +11,29 @@
         <h1>Welcome to your Groove Station!</h1>
     </div>
     <nav class="navBar">
-        <a href="/logout">Logout</a> 
         <a href="/playlist/<%= body.id %>">Let's Groove</a>
+        <a href="/logout">Logout</a> 
     </nav>
 </head>
 <body>
-    <div class="profileDetails">
-        <h3><%= body.display_name %></h3>
-    </div>
-    <div class="profileDetails">
-        <h3>Username: <%= body.id %></h3>
-    </div>
-    <div class='profileDetails'>
-        <h5>Email: <%= body.email %></h5>
-    </div>
-    <div class="profileDetails">
-        <h3>Followers:</h3>
-        <h3><%= body.followers.total %></h3>
-    </div>
-    <div class="profileDetails">
-        <img src="<%= body.images[0].url %>">
+    <div class="profileInfo">
+        <p class="profile">Profile Information</p>
+        <div class="profileDetails">
+            <h3><%= body.display_name %></h3>
+        </div>
+        <div class="profileDetails">
+            <h3>Username: <%= body.id %></h3>
+        </div>
+        <div class='profileDetails'>
+            <h5>Email: <%= body.email %></h5>
+        </div>
+        <div class="profileDetails">
+            <h3>Followers:</h3>
+            <h3><%= body.followers.total %></h3>
+        </div>
+        <div class="profileDetails">
+            <img src="<%= body.images[0].url %>">
+        </div>
     </div>
 </body>
 </html>

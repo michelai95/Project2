@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,19 +8,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Raleway&display=swap" rel="stylesheet">
     <title>Favorite Grooves</title>
 </head>
+
 <body>
-    <p class="playlistDescription">Home of your favorites tunes - <br>
-    feel free to adjust your playlist at any time by adding <br>
-    or deleting and songs from your playlist</h1>
-    <form method="POST" action="/tracks"></form>
+    <p class="playlistDescription">Home of your favorite playlists<br>
+        feel free to adjust your playlist at any time by adding <br>
+        or deleting songs from your playlist</h1>
+    <form method="POST" action="/playlists"></form>
 </body>
-<div class="tracks">
+<div class="playlists">
     <% for(var i=0; i<data.items.length; i++) { %>
-        <h3 class="tracks"><%= data.items[i].name %> </h3>
-        <tr>
-            <% } %>
-        </tr>
+    <h3 class="tracks"><%= data.items[i].name %> </h3>
+    <tr>
+        <% } %>
+    </tr>
 </div>
-<div class="playlistDetails">
+<div class="addSong">
+    <form action="/songs" method="GET">
+        <input type="text" placeholder="title of song..." name="search"> 
+        <button type="submit">Search</button>
+    </form>
+    <a href="/songs/search">Add a song</a>
 </div>
 </html>
