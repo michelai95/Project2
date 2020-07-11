@@ -24,7 +24,7 @@
 - [X] message that flashes once the profile has been created 
 
 ## profile 
-- [X] will show playlist created of favorite songs
+- [X] will show your playlists, one of which will be your favorite
 - [/] will have an option for you to add another song
 - [/] will give you the ability to delete a song from your playlist 
 - [/] ability to search for a specific song by id 
@@ -64,3 +64,4 @@
 - [ ] https://animejs.com/
 - [ ] https://www.pexels.com/photo/closeup-photography-of-jukebox-21088/
 - [ ] https://github.com/spotify/web-api-auth-examples
+- [ ] https://www.w3schools.com/howto/howto_js_dropdown_sidenav.asp

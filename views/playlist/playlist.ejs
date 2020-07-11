@@ -10,10 +10,10 @@
 </head>
 
 <body>
-    <p class="playlistDescription">Home of your favorite playlists<br>
+    <p class="container3">Top Playlists</p>
+    <p class="playlistDescription">Some of your favorite playlists<br>
         feel free to adjust your playlist at any time by adding <br>
         or deleting songs from your playlist</h1>
-    <form method="POST" action="/playlists"></form>
 </body>
 <div class="playlists">
     <% for(var i=0; i<data.items.length; i++) { %>
@@ -23,7 +23,7 @@
     </tr>
 </div>
 <div class="addSong">
-    <form action="/tracks/search" method="GET">
+    <form action="tracks/search" method="GET">
         <input type="text" placeholder="title of song..." name="search"> 
         <button type="submit">Search</button>
     </form>
