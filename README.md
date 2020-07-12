@@ -27,7 +27,7 @@
 - [X] will show your playlists, one of which will be your favorite
 - [/] will have an option for you to add another song
 - [/] will give you the ability to delete a song from your playlist 
-- [/] ability to search for a specific song by id 
+- [X] ability to search for a specific song by name/id 
 
 ![](IMG_3005.jpeg)
 ![](IMG_3006.jpeg)

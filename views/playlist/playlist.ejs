@@ -18,13 +18,15 @@
 <div class="playlists">
     <% for(var i=0; i<data.items.length; i++) { %>
     <h3 class="tracks"><%= data.items[i].name %> </h3>
+    <img src="<%= data.items[i].images[0].url %>"></h3>
     <tr>
         <% } %>
     </tr>
 </div>
 <div class="addSong">
-    <form action="tracks/search" method="GET">
-        <input type="text" placeholder="title of song..." name="search"> 
+    <form action="/track/search" method="GET">
+        <input type="text" placeholder="title of song..." name="name"> 
+        <input type="hidden" name="userId" value="<%= data.userId %>"> 
         <button type="submit">Search</button>
     </form>
 </div>

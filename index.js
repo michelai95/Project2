@@ -172,12 +172,7 @@ app.get('/profile', function (req, res) {
         });
     }
 })
-
-
-// TODO find way to search for user by id 
-// find way to search for song by id 
-// STRETCH
-// PUT route for replacing items on playlist - stretch goal     
+ 
 
 // Token refresh route 
 app.get('/refresh_token', function (req, res) {
@@ -216,18 +211,9 @@ app.get('/logout', function (req, res) {
 // call on routes from controller folder 
 app.use('/auth', require('./controllers/auth'))
 app.use('/playlist', require('./controllers/playlist'))
+app.use('/track', require('./controllers/track'))
 
 // initialize Server 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`firing on all ${process.env.PORT} cylinders`)
 })
-
-/*--------- Grave Yard -------*/
- // app.get('/login', function(req, res) {
- //     var scopes = 'user-read-private user-read-email';
-  //     res.redirect('https://accounts.spotify.com/authorize' +
-  //       '?response_type=code' +
-  //       '&client_id=' + my_client_id +
-  //       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
- //       '&redirect_uri=' + encodeURIComponent(redirect_uri));
- //     });

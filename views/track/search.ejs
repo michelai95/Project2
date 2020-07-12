@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Songs</title>
+</head>
+<body>
+    <div class="results">
+        <% results.tracks.forEach(function(track) { %>
+            <%= track.album.name %>
+            <% track.album.images[0].url %>
+            <%= track.name %>
+            <form method="POST" action="/track/<%= track.id %>">
+                <select name="playlist" id="playlists">
+                    <% results.playlists.forEach(function(playlist) { %>
+                        <option value="<%=playlist.id%>"><%= playlist.name %></option>
+                        <% }) %>
+                </select>
+                <input type="submit" value="addToPlaylist">
+            </form>
+       <% }) %>
+    </div>
+</html>
