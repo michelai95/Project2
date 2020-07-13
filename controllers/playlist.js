@@ -18,7 +18,6 @@ router.get('/:id', function (req, res) {
     spotify
         .request(`https://api.spotify.com/v1/users/${req.params.id}/playlists`)
         .then(function (data) {
-            console.log('!!!!!!!!!!', data)
             console.log(data.items[0].owner)
             res.render('playlist/playlist', { data: {...data, userId: data.items[0].owner.id} })
         }).catch(function (err) {
