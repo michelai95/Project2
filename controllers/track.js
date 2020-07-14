@@ -42,14 +42,14 @@ router.post('/:id', function (req, res) {
     })
         .then(function (data) {
             console.log(data)
-            res.redirect('/playlist/playlist')
+            res.render('/playlist/playlist', `{spotify:local:{artist}:{album_title}:{track_title}:{duration_in_seconds}}`)
         }).catch(function (err) {
             console.log(err)
         })
 })
 
 router.put('/:id', function(req, res) {
-    var playlistUrl = `https://api.spotify.com/v1/playlists/${req.query.userId}`
+    var playlistUrl = `https://api.spotify.com/v1/playlists/${req.body.trackId}`
     spotify
     .request(playlistUrl)
     axios.put(playlistUrl, { 

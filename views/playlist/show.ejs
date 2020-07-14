@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlist</title>
+</head>
+<body>
+    <div class="playlists">
+        <% for(var i=0; i<data.items.length; i++) { %>
+        <h3 class="tracks"><%= data.items[i].name %> </h3>
+        <img src="<%= data.items[i].images[0].url %>"></h3>
+        <tr>
+            <% } %>
+        </tr>
+    </div>
+</body>
+</html>
