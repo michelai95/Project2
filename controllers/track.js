@@ -48,7 +48,16 @@ router.post('/:id', function (req, res) {
         })
 })
 
-
+router.put('/:id', function(req, res) {
+    var playlistUrl = `https://api.spotify.com/v1/playlists/${req.query.userId}`
+    spotify
+    .request(playlistUrl)
+    axios.put(playlistUrl, { 
+        "name": "Updated Playlist Name",
+        "description": "Updated playlist description",
+        "public": false
+      })
+})
 
 
 // STRETCH GOAL
@@ -56,10 +65,10 @@ router.post('/:id', function (req, res) {
 router.delete('/:id', function (req, res) {
     spotify
     .request(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`)
-    db.song.destroy({
-        where: {
-            name: req.params.name,
-            id: req.params.id
+    axios.destroy(playlistUrl, { uris: [`spotify:track:${req.params.id}`] }, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('spotifyToken')}`
         }
     }).then(function (track) {
         console.log(track)
