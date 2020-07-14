@@ -33,14 +33,14 @@ router.get('/search', function (req, res) {
 router.post('/:id', function (req, res) {
     var playlistUrl = `https://api.spotify.com/v1/playlists/${req.body.playlist}/tracks`
     spotify
-    .request(playlistUrl)
-    axios.post(playlistUrl, {uris: [`spotify:track:${req.params.id}`]}, {
+        .request(playlistUrl)
+    axios.post(playlistUrl, { uris: [`spotify:track:${req.params.id}`] }, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('spotifyToken')}`
         }
-    }) 
-    .then(function (data) {
+    })
+        .then(function (data) {
             console.log(data)
             res.redirect('/playlist/playlist')
         }).catch(function (err) {
