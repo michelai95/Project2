@@ -40,9 +40,10 @@ router.post('/:id', function (req, res) {
             'Authorization': `Bearer ${localStorage.getItem('spotifyToken')}`
         }
     })
-        .then(function (data) {
-            console.log(data)
-            res.render('/playlist/playlist', `{spotify:local:{artist}:{album_title}:{track_title}:{duration_in_seconds}}`)
+    .then(function (data) {
+        console.log(data)
+        req.flash('Success', 'Song added!')
+            res.redirect('/playlist/playlist')
         }).catch(function (err) {
             console.log(err)
         })
@@ -71,8 +72,7 @@ router.delete('/:id', function (req, res) {
             'Authorization': `Bearer ${localStorage.getItem('spotifyToken')}`
         }
     }).then(function (track) {
-        console.log(track)
-        res.redirect('/playlist/playlist')
+    
     })
 })
 

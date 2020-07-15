@@ -13,7 +13,6 @@
         <%= track.album.name %>
         <% track.album.images[0].url %>
         <%= track.name %>
-        <a href="<%= track.preview_url %>" class="preview">
         <form method="POST" action="/track/<%= track.id %>">
             <select name="playlist" id="playlists">
                 <% results.playlists.forEach(function(playlist) { %>
@@ -24,5 +23,4 @@
         </form>
         <% }) %>
     </div>
-
 </html>
