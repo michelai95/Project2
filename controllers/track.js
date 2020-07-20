@@ -41,6 +41,8 @@ router.post('/:id', function (req, res) {
     }).then(function([track, added]) {
         console.log(data)
         if (added) {
+            successRedirect: '/tracks/search'
+            successFlash: 'Song was added!'
             req.flash('Your song was added!')
             // make sure there is front end to support flash message
             return res.redirect('/track/search')
