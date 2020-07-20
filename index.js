@@ -11,6 +11,7 @@ const passport = require('./config/ppConfig')
 const db = require('./models')
 const isLoggedIn = require('./middleware/isLoggedIn')
 const Spotify = require('node-spotify-api');
+let methodOverride = require('method-override')
 
 const express = require('express')
 var request = require('request')
@@ -54,6 +55,7 @@ app.use(ejsLayouts)
 app.use(require('morgan')('dev'))
 app.use(helmet())
 app.use(express.static('public'))
+app.use(methodOverride("_method"))
 
 // sequelize store class 
 const sessionStore = new SequelizeStore({
@@ -101,7 +103,7 @@ app.get('/login', function (req, res) {
     res.cookie(stateKey, state);
 
     // your application requests authorization
-    var scope = 'user-read-private user-read-email playlist-modify-public user-library-read user-library-modify playlist-read-collaborative';
+    var scope = 'user-read-private user-read-email playlist-modify-public user-library-read user-library-modify playlist-read-collaborative playlist-modify-private';
     res.redirect('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
             response_type: 'code',
@@ -147,7 +149,6 @@ app.get('/profile', function (req, res) {
 
                 var access_token = body.access_token,
                     refresh_token = body.refresh_token;
-                    console.log('!!!!!!!!!!!', access_token)
                 localStorage.setItem('spotifyToken', access_token)
                 var options = {
                     url: 'https://api.spotify.com/v1/me',

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
     <title>Songs</title>
 </head>
 
@@ -19,7 +20,15 @@
                 <option value="<%=playlist.id%>"><%= playlist.name %></option>
                 <% }) %>
             </select>
-            <input type="submit" value="addToPlaylist">
+            <input type="submit" value="add" class="search">
+        </form>
+        <form method="POST" action="/track/delete/<%= track.id %>?_method=DELETE">
+            <select name="playlist" id="playlists">
+                <% results.playlists.forEach(function(playlist) { %>
+                <option value="<%=playlist.id%>"><%= playlist.name %></option>
+                <% }) %>
+            </select>
+            <input type="submit" value="undo" class="search">
         </form>
         <% }) %>
     </div>

@@ -15,7 +15,6 @@ var spotify = new Spotify({
 });
 
 router.get('/search', function (req, res) {
-    console.log(req.query)
     spotify
     .search({ type: 'track', query: req.query.name, limit: 20 })
     .then(function (data) {
@@ -24,7 +23,7 @@ router.get('/search', function (req, res) {
             .request(`https://api.spotify.com/v1/users/${req.query.userId}/playlists`)
             .then(function (data) {
                 var playlists = data.items
-                console.log(tracks)
+                console.log(playlists)
                 res.render('track/search', {results: {tracks: tracks, playlists: playlists}})
             })
         })
@@ -39,40 +38,44 @@ router.post('/:id', function (req, res) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('spotifyToken')}`
         }
-    })
-    .then(function (data) {
+    }).then(function([track, added]) {
         console.log(data)
-        req.flash('Success', 'Song added!')
-            res.redirect('/playlist/playlist')
+        if (added) {
+            req.flash('Your song was added!')
+            // make sure there is front end to support flash message
+            return res.redirect('/track/search')
+        } else {
+            console.log('song could not be added')
+            req.flash('error', 'song could not be added to the playlist')
+            return res.redirect('/track/search')
+        }
+            // res.redirect('/playlist/playlist')
+            // res.send('/playlist/playlist')
         }).catch(function (err) {
             console.log(err)
         })
 })
 
-router.put('/:id', function(req, res) {
-    var playlistUrl = `https://api.spotify.com/v1/playlists/${req.body.trackId}`
+
+// should delete a song from the users library 
+router.delete('/delete/:id', function (req, res) {
+    console.log('👁👁👁👁👁👁👁')
+    let playlistUrl = `https://api.spotify.com/v1/playlists/${req.body.playlist}/tracks`
     spotify
     .request(playlistUrl)
-    axios.put(playlistUrl, { 
-        "name": "Updated Playlist Name",
-        "description": "Updated playlist description",
-        "public": false
-      })
-})
-
-
-// STRETCH GOAL
-// should delete a song from the users library 
-router.delete('/:id', function (req, res) {
-    spotify
-    .request(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`)
-    axios.destroy(playlistUrl, { uris: [`spotify:track:${req.params.id}`] }, {
+    axios.delete(playlistUrl, {"tracks":  [{ "uri": [`spotify:track:${req.params.id}`], "positions": [0]}]}, {
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('spotifyToken')}`
+            'Authorization': `${localStorage.getItem('spotifyToken')}`
+    }
+    }).then(function([track, deleted]) {
+        if (deleted) {
+            req.flash('You removed the song')
+            req.redirect('track/search')
         }
-    }).then(function (track) {
     
+    }).catch(function(err) {
+        console.log(err.response.data)
     })
 })
 
@@ -84,5 +87,16 @@ router.delete('/:id', function (req, res) {
  //         res.send('/songs', {data})
  //     })
  // })
+
+ // router.put('/:id', function(req, res) {
+//     var playlistUrl = `https://api.spotify.com/v1/playlists/${req.body.trackId}`
+//     spotify
+//     .request(playlistUrl)
+//     axios.put(playlistUrl, { 
+//         "name": "Updated Playlist Name",
+//         "description": "Updated playlist description",
+//         "public": false
+//       })
+// })
 
 module.exports = router

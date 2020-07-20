@@ -167,3 +167,8 @@ a:link {
     color: white;
     font-family: 'Raleway', sans-serif;
   }
+
+  .playlists img {
+    width: 200px;
+    height: 200px;
+  }

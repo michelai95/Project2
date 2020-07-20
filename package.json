@@ -17,6 +17,7 @@
     "express-session": "^1.17.1",
     "helmet": "^3.23.3",
     "localStorage": "^1.0.4",
+    "method-override": "^3.0.0",
     "morgan": "^1.10.0",
     "node-spotify-api": "^1.1.1",
     "passport": "^0.4.1",
